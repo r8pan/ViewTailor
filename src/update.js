@@ -1,7 +1,6 @@
-import { linkPurposes } from "./WCAG/linkPurposes/linkPurposes.js";
-import { lsTarget, changeLineSpacing } from "./UAAG/lineSpacing/lineSpacing.js";
-import { fcTarget, changeFontColor } from "./UAAG/fontColor/fontColor.js";
-import { bgcTarget, changeBackgroundColor } from "./UAAG/backgroundColor/backgroundColor.js";
+import { lsTarget, changeLineSpacing } from "./contentScripts/lineSpacing/lineSpacing.js";
+import { fcTarget, changeFontColor } from "./contentScripts/fontColor/fontColor.js";
+import { bgcTarget, changeBackgroundColor } from "./contentScripts/backgroundColor/backgroundColor.js";
 export { update };
 
 var url = (new URL(window.location.href)).hostname;
@@ -12,11 +11,6 @@ function update(isLoad = false) {
     chrome.storage.local.get(url, data => {
         let currentHeight = document.body.scrollHeight;
         if (currentHeight > docHeight) {
-            if (data[url] && data[url].optimization) {
-                let links = document.body.querySelectorAll("a");
-                linkPurposes(links, data[url]);
-            }
-
             if (data[url] && data[url].backgroundColor) {
                 console.log("Updating background color");
                 changeBackgroundColor(data[url].backgroundColor, bgcTarget, true);

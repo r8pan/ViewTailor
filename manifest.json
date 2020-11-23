@@ -1,24 +1,24 @@
 {
     "name": "View Tailor",
-    "description": "Customize how your pages look",
+    "description": "Tailor how your pages look",
     "author": "br8558",
     "version": "1.0.0",
     "icons": {},
     "permissions": ["activeTab", "tabs", "storage", "<all_urls>"],
     "browser_action": {
-        "default_title": "Untitled",
-        "default_popup": "popup.html"
+        "default_title": "View Tailor",
+        "default_popup": "src/popup/popup.html"
     },
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
             "all_frames": false,
             "run_at" : "document_idle",
-            "js": ["style_runner.js"]
+            "js": ["src/contentScripts/style_runner.js"]
         }
     ],
     "web_accessible_resources": [
-        "style.js",
+        "src/contentScripts/style.js",
         "src/*"
     ],
     "commands": {

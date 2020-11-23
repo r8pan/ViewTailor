@@ -6,6 +6,7 @@ var focusHighlightCSS2 = "a:focus div {color: rgb(255,255,255) !important;}";
 var url = (new URL(window.location.href)).hostname;
 
 chrome.storage.local.get(url, data => {
+    console.log("in enable.js");
     if (!data[url]) data[url] = {};
     data[url].focusHighlight = true;
     console.log(data[url]);

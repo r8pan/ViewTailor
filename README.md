@@ -1,1 +1,1 @@
-Customize how your web pages look
+Tailor how your web pages look

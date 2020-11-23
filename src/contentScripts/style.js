@@ -1,8 +1,8 @@
 var docHeight = document.body.scrollHeight;
 
 //******************************************************************************
-import { initLoad } from "./src/initLoad.js";
-import { update } from "./src/update.js";
+import { initLoad } from "../initLoad.js";
+import { update } from "../update.js";
 
 var count = 0;
 
