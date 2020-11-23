@@ -1,0 +1,68 @@
+<!doctype html>
+
+<html lang="zh-CN">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <div class="row1">
+            一键优化
+            <label class="switch">
+                <input id="optimization" type="checkbox">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- <div class="row1">
+            字号
+            <input id="text-scale" type="range" min="100" max="200" value="100" step="20">
+            <span id="text-scale-value">100%</span>
+        </div> -->
+
+        <div class="row1">
+            行距
+            <input id="line-spacing" type="range" min="100" max="200" value="100" step="25">
+            <span id="line-spacing-value">100%</span>
+        </div>
+
+        <div class="row1">
+            <label for="font-color">字体颜色</label>
+            <button id="font-color" type="button"></button>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <label for="background-color">背景颜色</label>
+            <button id="background-color" type="button"></button>
+
+            <div>
+                <div id="color-picker">
+                    <div>
+                        <button id="original-color" title="原色">原色</button>
+                    </div>
+
+                    <!-- <button id="light-blue" type="button"></button> -->
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row1">
+            <span id="focus-highlight-label">焦点</span>
+            <label class="switch">
+                <input id="focus-highlight" type="checkbox" aria-labelledby="focus-highlight-label">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="row1">
+            <span id="distinguish-visited-links-label">区分已访问链接</span>
+            <label class="switch">
+                <input id="distinguish-visited-links" type="checkbox" aria-labelledby="distinguish-visited-links-label">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <script type="module" src="popup.js"></script>
+    </body>
+
+</html>
