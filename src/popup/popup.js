@@ -263,6 +263,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 distinguishVisitedLinks.checked = data[url].distinguishVisitedLinks;
                 fetchScripts(["../contentScripts/distinguishVisitedLinks/distinguishVisitedLinks.js"], tabs);
             }
+            else {
+                fontColor.disabled = true;
+                fontColor.value = "#101010";
+                fontColorPicker.style.height = "0";
+                fontColorPicker.style.marginTop = "0";
+                fontColorSwitch.checked = false;
+                fontColorPicker.querySelectorAll("button").forEach(b => {
+                    b.style.display = "none";
+                });
+                backgroundColor.disabled = true;
+                backgroundColor.value = "#F0F0F0";
+                backgroundColorPicker.style.height = "0";
+                backgroundColorPicker.style.marginTop = "0";
+                backgroundColorSwitch.checked = false;
+                backgroundColorPicker.querySelectorAll("button").forEach(b => {
+                    b.style.display = "none";
+                });
+            }
         });
     });
 }, false);
