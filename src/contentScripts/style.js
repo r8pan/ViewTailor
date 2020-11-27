@@ -21,7 +21,7 @@ export function main() {
 function updateStart() {
     const config = { attributes: true, childList: true, subtree: true };
     const callback = function(mutationsList, observer) {
-        if (mutationsList.length > 3) {
+        if (mutationsList.length > 2) {
             update();
             observer.disconnect();
             setTimeout(() => observer.observe(document.body, config), 800);

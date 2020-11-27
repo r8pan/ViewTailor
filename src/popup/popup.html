@@ -8,33 +8,50 @@
 
     <body>
 
-        <div class="row1">
-            行距
-            <input id="line-spacing" type="range" min="100" max="200" value="100" step="25">
-            <span id="line-spacing-value">100%</span>
-        </div>
-
-        <div class="row1">
-            <label for="font-color">字体颜色</label>
+        <!-- <div class="row1">
+            <label for="font-color">Font color</label>
             <button id="font-color" type="button"></button>
-            <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <label for="background-color">背景颜色</label>
+            <span>&nbsp;&nbsp;&nbsp;</span>
+            <label for="background-color">Background color</label>
             <button id="background-color" type="button"></button>
 
             <div>
                 <div id="color-picker">
                     <div>
-                        <button id="original-color" title="原色">原色</button>
+                        <button id="original-color" title="Original color">OC</button>
                     </div>
-
-                    <!-- <button id="light-blue" type="button"></button> -->
                 </div>
             </div>
-        </div>
-
+        </div> -->
 
         <div class="row1">
-            <span id="focus-highlight-label">焦点</span>
+            <span id="font-color-label" class="label-control">Font color</span>
+            <input id="font-color" type="color">
+            <label class="switch">
+                <input id="font-color-switch" type="checkbox" aria-labelledby="font-color-label">
+                <span class="slider"></span>
+            </label>
+            <div id="font-color-picker" class="font-color-history"></div>
+        </div>
+
+        <div class="row1">
+            <span id="background-color-label" class="label-control">Background color</span>
+            <input id="background-color" type="color">
+            <label class="switch">
+                <input id="background-color-switch" type="checkbox" aria-labelledby="background-color-label">
+                <span class="slider"></span>
+            </label>
+            <div id="background-color-picker" class="background-color-history"></div>
+        </div>
+
+        <div class="row1">
+            <span id="line-spacing-label" class="label-control">Line spacing</span>
+            <input id="line-spacing" type="range" min="100" max="200" value="100" step="25" aria-labelledby="line-spacing-label">
+            <span id="line-spacing-value">100%</span>
+        </div>
+
+        <div class="row1">
+            <span id="focus-highlight-label">Focus state</span>
             <label class="switch">
                 <input id="focus-highlight" type="checkbox" aria-labelledby="focus-highlight-label">
                 <span class="slider"></span>
@@ -42,7 +59,7 @@
         </div>
 
         <div class="row1">
-            <span id="distinguish-visited-links-label">区分已访问链接</span>
+            <span id="distinguish-visited-links-label">Distinguish visited links</span>
             <label class="switch">
                 <input id="distinguish-visited-links" type="checkbox" aria-labelledby="distinguish-visited-links-label">
                 <span class="slider"></span>
