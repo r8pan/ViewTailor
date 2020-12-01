@@ -44,11 +44,35 @@
             <div id="background-color-picker" class="background-color-history"></div>
         </div>
 
+
         <div class="row1">
-            <span id="line-spacing-label" class="label-control">Line spacing</span>
-            <input id="line-spacing" type="range" min="100" max="200" value="100" step="25" aria-labelledby="line-spacing-label">
-            <span id="line-spacing-value">100%</span>
+            <span id="selection-state-label" class="label-control">Selection state</span>
+            <button id="selection-state-switch" class="menu-arrow" type="button"
+                aria-labelledby="selection-state-label">&#x276f;</button>
         </div>
+
+        <div id="selection-state-elements">
+            <div class="row1">
+                <span id="selection-font-color-label" class="label-control">Font color</span>
+                <input id="selection-font-color" type="color">
+                <label class="switch">
+                    <input id="selection-font-color-switch" type="checkbox" aria-labelledby="selection font-color-label">
+                    <span class="slider"></span>
+                </label>
+                <div id="selection-font-color-picker" class="font-color-history"></div>
+            </div>
+
+            <div class="row1">
+                <span id="selection-background-color-label" class="label-control">Background color</span>
+                <input id="selection-background-color" type="color">
+                <label class="switch">
+                    <input id="selection-background-color-switch" type="checkbox" aria-labelledby="background-color-label">
+                    <span class="slider"></span>
+                </label>
+                <div id="selection-background-color-picker" class="background-color-history"></div>
+            </div>
+        </div>
+
 
         <div class="row1">
             <span id="focus-highlight-label">Focus state</span>
@@ -59,11 +83,25 @@
         </div>
 
         <div class="row1">
-            <span id="distinguish-visited-links-label">Distinguish visited links</span>
-            <label class="switch">
-                <input id="distinguish-visited-links" type="checkbox" aria-labelledby="distinguish-visited-links-label">
-                <span class="slider"></span>
-            </label>
+            <span id="other-label" class="label-control">Other</span>
+            <button id="other-switch" class="menu-arrow" type="button"
+                aria-labelledby="other-label">&#x276f;</button>
+        </div>
+
+        <div id="other-elements">
+            <div class="row1">
+                <span id="line-spacing-label" class="label-control">Line spacing</span>
+                <input id="line-spacing" type="range" min="100" max="200" value="100" step="25" aria-labelledby="line-spacing-label">
+                <span id="line-spacing-value">100%</span>
+            </div>
+
+            <div class="row1">
+                <span id="distinguish-visited-links-label">Distinguish visited links</span>
+                <label class="switch">
+                    <input id="distinguish-visited-links" type="checkbox" aria-labelledby="distinguish-visited-links-label">
+                    <span class="slider"></span>
+                </label>
+            </div>
         </div>
 
         <script type="module" src="popup.js"></script>

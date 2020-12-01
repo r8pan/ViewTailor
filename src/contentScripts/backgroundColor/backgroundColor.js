@@ -1,7 +1,7 @@
 export { bgcTarget, changeBackgroundColor };
 
 var url = (new URL(window.location.href)).hostname;
-var bgcTarget = "body,div,a,span,li,ol,ul";
+var bgcTarget = "body,div,a,span,li,ol,ul,td";
 
 chrome.storage.local.get(url, data => {
     if (data[url]) {
@@ -37,7 +37,7 @@ function changeBackgroundColor(bgc, target, isUpdate = false) {
         if (isUpdate) n.backgroundColorChanged = true;
     });
     overlays.forEach(n => {
-        if (n.style) n.style.setProperty("opacity", "0.9");
+        // if (n.style) n.style.setProperty("opacity", "0.9");
         removeBackgroundColor(n);
     });
     videos.forEach(v => {

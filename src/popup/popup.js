@@ -1,158 +1,100 @@
-import { RGB2Hex } from "../utilities/utilities.js";
+import { RGB2Hex, fetchScripts } from "../utilities/utils.js";
+import { initColorPicker, updateColorHistory, setColorPickerAnimation } from "./colorPicker.js";
 
 let url = new URL(window.location.href);
 
 //******************************************************************************
-
 let fontColor = document.getElementById("font-color");
 let fontColorSwitch = document.getElementById("font-color-switch");
 let fontColorPicker = document.getElementById("font-color-picker");
 let backgroundColor = document.getElementById("background-color");
 let backgroundColorSwitch = document.getElementById("background-color-switch");
 let backgroundColorPicker = document.getElementById("background-color-picker");
-let lineSpacing = document.getElementById("line-spacing");
+let selectionFontColor = document.getElementById("selection-font-color");
+let selectionFontColorSwitch = document.getElementById("selection-font-color-switch");
+let selectionFontColorPicker = document.getElementById("selection-font-color-picker");
+let selectionBackgroundColor = document.getElementById("selection-background-color");
+let selectionBackgroundColorSwitch = document.getElementById("selection-background-color-switch");
+let selectionBackgroundColorPicker = document.getElementById("selection-background-color-picker");
+
+let selectionStateSwitch = document.getElementById("selection-state-switch");
 let focusHighlight = document.getElementById("focus-highlight");
+let otherSwitch = document.getElementById("other-switch");
+let lineSpacing = document.getElementById("line-spacing");
 let distinguishVisitedLinks = document.getElementById("distinguish-visited-links");
 
 //color picker******************************************************************
 
-// var colors = [
-//     ["#000000", "黑色"], ["#4F2F4F", "紫罗兰"], ["#5C4033", "深棕"], ["#2F4F2F", "深绿"], ["#23238E", "海军蓝"],
-//     ["#871F78", "深紫色"], ["#3232CD", "中蓝色"], ["#236B8E", "钢蓝色"], ["#8E6B23", "赭色"], ["#238E23", "森林绿"],
-//     ["#A67D3D", "棕色"], ["#FF0000", "红色"], ["#0000FF", "蓝色"], ["#9F5F9F", "蓝紫色"], ["#DB7093", "紫红色"],
-//     ["#FF1CAE", "粉红"], ["#FF00FF", "牡丹红"], ["#DB70DB", "淡紫色"], ["#E47833", "桔黄色"], ["#A68064", "中木色"],
-//     ["#DB9370", "棕褐色"], ["#FF7F00", "橙色"], ["#A8A8A8", "灰色"], ["#C0C0C0", "浅灰色"],  ["#E9C2A6", "浅木色"],
-//     ["#00FF00", "绿色"], ["#99CC32", "黄绿色"], ["#D9D919", "金色"], ["#EAADEA", "李子色"], ["#D8D8BF", "麦黄色"],
-//     ["#66CCFF", "天蓝色"], ["#C0D0D9", "浅蓝色"], ["#D9D9F3", "石英色"], ["#DBDB70", "鲜黄色"], ["#00FF7F", "春绿色"],
-//     ["#FFFF00", "黄色"], ["#00FFFF", "青色"], ["#E6E8FA", "银色"], ["#F9F9DF", "米色"], ["#FFFFFF", "白色"],
-// ];
-//
-initHistoryColors("font");
-initHistoryColors("background");
+initColorPicker("font");
+initColorPicker("background");
+initColorPicker("selection-font");
+initColorPicker("selection-background");
 
-function initHistoryColors(type) {
-    let cp = document.getElementById(type + "-color-picker");
-    for (let i = 0; i < 5; i++) {
-        let colorButton = document.createElement("BUTTON");
-        colorButton.type = "button";
-        colorButton.id = type + "-color-picker-" + i;
-        colorButton.style.marginRight = "8px";
-        colorButton.onclick = function() {
-            let cp = document.getElementById(type + "-color");
-            cp.value = RGB2Hex(this.style.backgroundColor);
-            cp.dispatchEvent(new Event("change"));
-        }
-        colorButton.onkeyup = (event) => keyboardNavigation(event, type);
-        cp.appendChild(colorButton);
-    }
-    cp.style.height = "0";
-}
-
-function updateColorHistory(type, color) {
-    let key = type+"ColorHistory";
-    chrome.storage.local.get(key, data => {
-        if (!data[key]) data[key] = [];
-        console.log(type, data[key]);
-        if (data[key].length > 0) setColorHistory(type, data[key]);
-        if (color) {
-            if (data[key].length > 0 && !data[key].includes(color)) {
-                data[key].unshift(color);
-                data[key] = data[key].slice(0,5);
-            }
-            else data[key].push(color);
-            chrome.storage.local.set({[key]: data[key]}, () => setColorHistory(type, data[key]));
-        }
+//selection state***************************************************************
+selectionStateSwitch.onclick = () => {
+    selectionStateSwitch.isExpanded = !selectionStateSwitch.isExpanded;
+    selectionStateSwitch.style.transform = selectionStateSwitch.isExpanded ? "rotate(90deg)" : "rotate(0deg)";
+    document.getElementById("selection-state-elements").querySelectorAll('div[class="row1"]').forEach(d => {
+        // d.style.height = selectionStateSwitch.isExpanded ? "20px" : "0";
+        d.style.padding = selectionStateSwitch.isExpanded ? "15px" : "0 15px";
+        d.style.borderTop = selectionStateSwitch.isExpanded ? "1px solid rgb(240,240,240)" : "none";
+        d.querySelectorAll("span,input,label").forEach(e => {
+            e.style.display = selectionStateSwitch.isExpanded ? "inline-block" : "none";
+        });
     });
-}
-
-function setColorHistory(type, colors) {
-    let containers = document.getElementsByClassName(type+"-color-history");
-    colors = colors.slice(0, 5);
-    [...containers].forEach(ch => {
-        let cbs = ch.querySelectorAll("button");
-        for (let i = 0; i < colors.length; i++) {
-            console.log(colors, cbs);
-            cbs[i].style.backgroundColor = colors[i];
-        }
-    });
-}
-
-function keyboardNavigation(event, type) {
-    let i = parseInt(document.activeElement.id.substring(document.activeElement.id.length-1));
-    switch(event.which) {
-        case 37:
-            if (i === 0) break;
-            document.getElementById(type+"-color-picker-"+(i-1)).focus();
-            break;
-        case 39:
-            if (i === 4) break;
-            document.getElementById(type+"-color-picker-"+(i+1)).focus();
-            break;
-        default:
-            break;
-    }
-}
-
-fontColor.onchange = () => {
-    updateColorHistory("font", fontColor.value);
-    changeFontColor(false, fontColor.value);
-};
-
-fontColorSwitch.onclick = () => {
-    fontColor.disabled = !fontColor.disabled;
-    fontColorPicker.style.height = fontColor.disabled ? "0" : "20px";
-    fontColorPicker.style.marginTop = fontColor.disabled ? "0" : "5px";
-    fontColorPicker.querySelectorAll("button").forEach(b => {
-        b.style.display = fontColor.disabled ? "none" : "inline-block";
-    });
-    changeFontColor(fontColor.disabled, fontColor.value);
-};
-
-function changeFontColor(disabled, color) {
     chrome.tabs.query({active: true, currentWindow: true}, tabs => {
         let url = (new URL(tabs[0].url)).hostname;
         chrome.storage.local.get(url, data => {
             if (!data[url]) data[url] = {};
-            data[url].fontColor = disabled ? null : color;
+            data[url].selectionState = selectionStateSwitch.isExpanded;
+            setColorPickerAnimation(selectionFontColorPicker, !selectionStateSwitch.isExpanded
+                || !data[url].selectionFontColor);
+            setColorPickerAnimation(selectionBackgroundColorPicker, !selectionStateSwitch.isExpanded
+                || !data[url].selectionBackgroundColor);
+            chrome.storage.local.set({[url]: data[url]});
+        });
+    });
+};
+
+//focus highlight***************************************************************
+focusHighlight.onclick = element => {
+    console.log("received focusHighlight click event");
+    let isChecked = focusHighlight.checked;
+    chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+        let url = (new URL(tabs[0].url)).hostname;
+        chrome.storage.local.get(url, data => {
+            if (!data[url]) data[url] = {};
+            data[url].focusHighlight = isChecked;
             chrome.storage.local.set({[url]: data[url]}, () => {
-                fetchScripts(["../contentScripts/fontColor/fontColor.js",
-                    "../contentScripts/distinguishVisitedLinks/distinguishVisitedLinks.js"], tabs);
+                fetchScripts(["../contentScripts/focusHighlight/focusHighlight.js"], tabs);
             });
         });
     });
 }
 
-backgroundColor.onchange = () => {
-    updateColorHistory("background", backgroundColor.value);
-    changeBackgroundColor(false, backgroundColor.value);
-};
-
-backgroundColorSwitch.onclick = () => {
-    backgroundColor.disabled = !backgroundColor.disabled;
-    backgroundColorPicker.style.height = backgroundColor.disabled ? "0" : "20px";
-    backgroundColorPicker.style.marginTop = backgroundColor.disabled ? "0" : "5px";
-    backgroundColorPicker.querySelectorAll("button").forEach(b => {
-        b.style.display = backgroundColor.disabled ? "none" : "inline-block";
+//other*************************************************************************
+otherSwitch.onclick = () => {
+    otherSwitch.isExpanded = !otherSwitch.isExpanded;
+    otherSwitch.style.transform = otherSwitch.isExpanded ? "rotate(90deg)" : "rotate(0deg)";
+    document.getElementById("other-elements").querySelectorAll('div[class="row1"]').forEach(d => {
+        d.style.height = otherSwitch.isExpanded ? "20px" : "0";
+        d.style.padding = otherSwitch.isExpanded ? "15px" : "0 15px";
+        d.style.borderTop = otherSwitch.isExpanded ? "1px solid rgb(240,240,240)" : "none";
+        d.querySelectorAll('*').forEach(e => {
+            e.style.display = otherSwitch.isExpanded ? "inline-block" : "none";
+        });
     });
-    changeBackgroundColor(backgroundColor.disabled, backgroundColor.value);
-};
-
-function changeBackgroundColor(disabled, color) {
     chrome.tabs.query({active: true, currentWindow: true}, tabs => {
         let url = (new URL(tabs[0].url)).hostname;
         chrome.storage.local.get(url, data => {
             if (!data[url]) data[url] = {};
-            data[url].backgroundColor = disabled ? null : color;
-            chrome.storage.local.set({[url]: data[url]}, () => {
-                fetchScripts(["../contentScripts/backgroundColor/backgroundColor.js",
-                    "../contentScripts/distinguishVisitedLinks/distinguishVisitedLinks.js"], tabs);
-            });
+            data[url].other = otherSwitch.isExpanded;
+            chrome.storage.local.set({[url]: data[url]});
         });
     });
-}
+};
 
-//**line-spacing****************************************************************
-
+//line-spacing******************************************************************
 lineSpacing.oninput = function() {
     console.log("received line-spacing click event", this.value);
     chrome.tabs.query({active: true, currentWindow: true}, tabs => {
@@ -168,24 +110,7 @@ lineSpacing.oninput = function() {
     });
 };
 
-
-//**focus highlight*************************************************************
-focusHighlight.onclick = element => {
-    console.log("received focusHighlight click event");
-    let isChecked = document.getElementById("focus-highlight").checked;
-    chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-        let url = (new URL(tabs[0].url)).hostname;
-        chrome.storage.local.get(url, data => {
-            if (!data[url]) data[url] = {};
-            data[url].focusHighlight = isChecked;
-            chrome.storage.local.set({[url]: data[url]}, () => {
-                fetchScripts(["../contentScripts/focusHighlight/focusHighlight.js"], tabs);
-            });
-        });
-    });
-}
-
-//**distinguish visited links***************************************************
+//distinguish visited links*****************************************************
 distinguishVisitedLinks.onclick = element => {
     console.log("received distinguishVisitedLinks click event");
     let isChecked = document.getElementById("distinguish-visited-links").checked;
@@ -202,11 +127,20 @@ distinguishVisitedLinks.onclick = element => {
 }
 
 
-//**on opening the popup********************************************************
+//on opening the popup**********************************************************
 
 document.addEventListener('DOMContentLoaded', () => {
     fontColor.disabled = true;
     backgroundColor.disabled = true;
+    selectionFontColor.disabled = true;
+    selectionBackgroundColor.disabled = true;
+    document.getElementById("other-elements").querySelectorAll("div").forEach(d => {
+        d.style.height = "0";
+        d.style.padding = "0 15px";
+        d.querySelectorAll('*').forEach(e => {
+            e.style.display = "none";
+        });
+    });
     chrome.tabs.query({active: true, currentWindow: true}, tabs => {
         let url = (new URL(tabs[0].url)).hostname;
         console.log("current tab url: " + url);
@@ -215,13 +149,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data[url]) {
 
                 fontColor.disabled = !data[url].fontColor;
-                fontColor.value = data[url].fontColor ? data[url].fontColor : "#101010";
-                fontColorPicker.style.height = fontColor.disabled ? "0" : "20px";
-                fontColorPicker.style.marginTop = fontColor.disabled ? "0" : "5px";
+                fontColor.value = data[url].fontColor ? data[url].fontColor : "#222222";
+                setColorPickerAnimation(fontColorPicker, fontColor.disabled);
                 fontColorSwitch.checked = !!data[url].fontColor;
-                fontColorPicker.querySelectorAll("button").forEach(b => {
-                    b.style.display = fontColor.disabled ? "none" : "inline-block";
-                });
                 updateColorHistory("font");
                 if (data[url].fontColor) {
                     chrome.tabs.query({active: true, currentWindow: true}, tabs => {
@@ -230,19 +160,54 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 backgroundColor.disabled = !data[url].backgroundColor;
-                backgroundColor.value = data[url].backgroundColor ? data[url].backgroundColor : "#FFFFFF";
-                backgroundColorPicker.style.height = backgroundColor.disabled ? "0" : "20px";
-                backgroundColorPicker.style.marginTop = backgroundColor.disabled ? "0" : "5px";
+                backgroundColor.value = data[url].backgroundColor ? data[url].backgroundColor : "#F0F0F0";
+                setColorPickerAnimation(backgroundColorPicker, backgroundColor.disabled);
                 backgroundColorSwitch.checked = !!data[url].backgroundColor;
-                backgroundColorPicker.querySelectorAll("button").forEach(b => {
-                    b.style.display = backgroundColor.disabled ? "none" : "inline-block";
-                });
                 updateColorHistory("background");
                 if (data[url].backgroundColor) {
                     chrome.tabs.query({active: true, currentWindow: true}, tabs => {
                         fetchScripts(["../contentScripts/backgroundColor/backgroundColor.js"], tabs);
                     });
                 }
+
+                selectionStateSwitch.isExpanded = data[url].selectionState;
+                selectionStateSwitch.style.transform = selectionStateSwitch.isExpanded ? "rotate(90deg)" : "rotate(0deg)";
+                selectionFontColor.disabled = !data[url].selectionFontColor;
+                selectionFontColor.value = data[url].selectionFontColor ? data[url].selectionFontColor : "#222222";
+                selectionFontColorSwitch.checked = data[url].selectionFontColor;
+                updateColorHistory("selection-font");
+                selectionBackgroundColor.disabled = !data[url].selectionBackgroundColor;
+                selectionBackgroundColor.value = data[url].selectionBackgroundColor ? data[url].selectionBackgroundColor : "#F0F0F0";
+                selectionBackgroundColorSwitch.checked = data[url].selectionBackgroundColor;
+                updateColorHistory("selection-background");
+                document.getElementById("selection-state-elements").querySelectorAll('div[class="row1"]').forEach(d => {
+                    // d.style.height = selectionStateSwitch.isExpanded ? "20px" : "0";
+                    d.style.padding = selectionStateSwitch.isExpanded ? "15px" : "0 15px";
+                    d.style.borderTop = selectionStateSwitch.isExpanded ? "1px solid rgb(240,240,240)" : "none";
+                    d.querySelectorAll("span,input,label").forEach(e => {
+                        e.style.display = selectionStateSwitch.isExpanded ? "inline-block" : "none";
+                    });
+                    setColorPickerAnimation(selectionFontColorPicker, !selectionStateSwitch.isExpanded
+                        || !data[url].selectionFontColor);
+                    setColorPickerAnimation(selectionBackgroundColorPicker, !selectionStateSwitch.isExpanded
+                        || !data[url].selectionBackgroundColor);
+                });
+                if (data[url].selectionState) {
+                    chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+                        fetchScripts(["../contentScripts/selectionState/selectionState.js"], tabs);
+                    });
+                }
+
+                otherSwitch.isExpanded = data[url].other;
+                otherSwitch.style.transform = otherSwitch.isExpanded ? "rotate(90deg)" : "rotate(0deg)";
+                document.getElementById("other-elements").querySelectorAll('div[class="row1"]').forEach(d => {
+                    d.style.height = otherSwitch.isExpanded ? "20px" : "0";
+                    d.style.padding = otherSwitch.isExpanded ? "15px" : "0 15px";
+                    d.style.borderTop = otherSwitch.isExpanded ? "1px solid rgb(240,240,240)" : "none";
+                    d.querySelectorAll('*').forEach(e => {
+                        e.style.display = otherSwitch.isExpanded ? "inline-block" : "none";
+                    });
+                });
 
                 if (data[url].lineSpacing) {
                     lineSpacing.value = data[url].lineSpacing;
@@ -265,45 +230,36 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             else {
                 fontColor.disabled = true;
-                fontColor.value = "#101010";
-                fontColorPicker.style.height = "0";
-                fontColorPicker.style.marginTop = "0";
+                fontColor.value = "#222222";
+                setColorPickerAnimation(fontColorPicker, true);
                 fontColorSwitch.checked = false;
-                fontColorPicker.querySelectorAll("button").forEach(b => {
-                    b.style.display = "none";
-                });
+                // updateColorHistory("font");
                 backgroundColor.disabled = true;
                 backgroundColor.value = "#F0F0F0";
-                backgroundColorPicker.style.height = "0";
-                backgroundColorPicker.style.marginTop = "0";
+                setColorPickerAnimation(backgroundColorPicker, true);
                 backgroundColorSwitch.checked = false;
-                backgroundColorPicker.querySelectorAll("button").forEach(b => {
-                    b.style.display = "none";
+                // updateColorHistory("background");
+
+                selectionStateSwitch.isExpanded = false;
+                selectionStateSwitch.style.transform = "rotate(0deg)";
+                selectionFontColor.disabled = true;
+                selectionFontColor.value = "#222222";
+                selectionFontColorSwitch.checked = false;
+                // updateColorHistory("selection-font");
+                selectionBackgroundColor.disabled = true;
+                selectionBackgroundColor.value = "#F0F0F0";
+                selectionBackgroundColorSwitch.checked = false;
+                // updateColorHistory("selection-background");
+                document.getElementById("selection-state-elements").querySelectorAll('div[class="row1"]').forEach(d => {
+                    d.style.padding = "0 15px";
+                    d.style.borderTop = "none";
+                    d.querySelectorAll("span,input,label").forEach(e => {
+                        e.style.display = "none";
+                    });
+                    setColorPickerAnimation(selectionFontColorPicker, true);
+                    setColorPickerAnimation(selectionBackgroundColorPicker, true);
                 });
             }
         });
     });
 }, false);
-
-function fetchScripts(scripts, tabs) {
-    if (scripts.length === 1) {
-        fetch(scripts[0])
-            .then(response => response.text())
-            .then(text => {
-                chrome.tabs.executeScript(tabs[0].id,
-                    {code: text.substring(text.indexOf("var")), allFrames: true});
-            });
-    }
-    else {
-        fetch(scripts[0])
-            .then(response => response.text())
-            .then(text => {
-                chrome.tabs.executeScript(tabs[0].id,
-                    {code: text.substring(text.indexOf("var")), allFrames: true});
-            })
-            .then(() => {
-                scripts.shift();
-                fetchScripts(scripts, tabs);
-            });
-    }
-}
