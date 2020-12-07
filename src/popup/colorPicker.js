@@ -1,15 +1,3 @@
-// let fontColor = document.getElementById("font-color");
-// let fontColorSwitch = document.getElementById("font-color-switch");
-// let fontColorPicker = document.getElementById("font-color-picker");
-// let backgroundColor = document.getElementById("background-color");
-// let backgroundColorSwitch = document.getElementById("background-color-switch");
-// let backgroundColorPicker = document.getElementById("background-color-picker");
-// let selectionFontColor = document.getElementById("selection-font-color");
-// let selectionFontColorSwitch = document.getElementById("selection-font-color-switch");
-// let selectionFontColorPicker = document.getElementById("selection-font-color-picker");
-// let selectionBackgroundColor = document.getElementById("selection-background-color");
-// let selectionBackgroundColorSwitch = document.getElementById("selection-background-color-switch");
-// let selectionBackgroundColorPicker = document.getElementById("selection-background-color-picker");
 import { RGB2Hex, dash2cc, fetchScripts } from "../utilities/utils.js";
 
 export { initColorPicker, updateColorHistory, setColorPickerAnimation };
@@ -125,17 +113,3 @@ function setColorPickerAnimation(cp, disabled) {
         b.style.display = disabled ? "none" : "inline-block";
     });
 }
-
-// function changeBackgroundColor(disabled, color) {
-//     chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-//         let url = (new URL(tabs[0].url)).hostname;
-//         chrome.storage.local.get(url, data => {
-//             if (!data[url]) data[url] = {};
-//             data[url].backgroundColor = disabled ? null : color;
-//             chrome.storage.local.set({[url]: data[url]}, () => {
-//                 fetchScripts(["../contentScripts/backgroundColor/backgroundColor.js",
-//                     "../contentScripts/distinguishVisitedLinks/distinguishVisitedLinks.js"], tabs);
-//             });
-//         });
-//     });
-// }

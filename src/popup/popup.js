@@ -16,8 +16,15 @@ let selectionFontColorPicker = document.getElementById("selection-font-color-pic
 let selectionBackgroundColor = document.getElementById("selection-background-color");
 let selectionBackgroundColorSwitch = document.getElementById("selection-background-color-switch");
 let selectionBackgroundColorPicker = document.getElementById("selection-background-color-picker");
+let hoverFontColor = document.getElementById("hover-font-color");
+let hoverFontColorSwitch = document.getElementById("hover-font-color-switch");
+let hoverFontColorPicker = document.getElementById("hover-font-color-picker");
+let hoverBackgroundColor = document.getElementById("hover-background-color");
+let hoverBackgroundColorSwitch = document.getElementById("hover-background-color-switch");
+let hoverBackgroundColorPicker = document.getElementById("hover-background-color-picker");
 
 let selectionStateSwitch = document.getElementById("selection-state-switch");
+let hoverStateSwitch = document.getElementById("hover-state-switch");
 let focusHighlight = document.getElementById("focus-highlight");
 let otherSwitch = document.getElementById("other-switch");
 let lineSpacing = document.getElementById("line-spacing");
@@ -29,6 +36,9 @@ initColorPicker("font");
 initColorPicker("background");
 initColorPicker("selection-font");
 initColorPicker("selection-background");
+initColorPicker("hover-font");
+initColorPicker("hover-background");
+
 
 //selection state***************************************************************
 selectionStateSwitch.onclick = () => {
@@ -37,7 +47,7 @@ selectionStateSwitch.onclick = () => {
     document.getElementById("selection-state-elements").querySelectorAll('div[class="row1"]').forEach(d => {
         // d.style.height = selectionStateSwitch.isExpanded ? "20px" : "0";
         d.style.padding = selectionStateSwitch.isExpanded ? "15px" : "0 15px";
-        d.style.borderTop = selectionStateSwitch.isExpanded ? "1px solid rgb(240,240,240)" : "none";
+        // d.style.borderTop = selectionStateSwitch.isExpanded ? "1px solid rgb(240,240,240)" : "none";
         d.querySelectorAll("span,input,label").forEach(e => {
             e.style.display = selectionStateSwitch.isExpanded ? "inline-block" : "none";
         });
@@ -51,6 +61,30 @@ selectionStateSwitch.onclick = () => {
                 || !data[url].selectionFontColor);
             setColorPickerAnimation(selectionBackgroundColorPicker, !selectionStateSwitch.isExpanded
                 || !data[url].selectionBackgroundColor);
+            chrome.storage.local.set({[url]: data[url]});
+        });
+    });
+};
+
+//hover state*******************************************************************
+hoverStateSwitch.onclick = () => {
+    hoverStateSwitch.isExpanded = !hoverStateSwitch.isExpanded;
+    hoverStateSwitch.style.transform = hoverStateSwitch.isExpanded ? "rotate(90deg)" : "rotate(0deg)";
+    document.getElementById("hover-state-elements").querySelectorAll('div[class="row1"]').forEach(d => {
+        d.style.padding = hoverStateSwitch.isExpanded ? "15px" : "0 15px";
+        d.querySelectorAll("span,input,label").forEach(e => {
+            e.style.display = hoverStateSwitch.isExpanded ? "inline-block" : "none";
+        });
+    });
+    chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+        let url = (new URL(tabs[0].url)).hostname;
+        chrome.storage.local.get(url, data => {
+            if (!data[url]) data[url] = {};
+            data[url].hoverState = hoverStateSwitch.isExpanded;
+            setColorPickerAnimation(hoverFontColorPicker, !hoverStateSwitch.isExpanded
+                || !data[url].hoverFontColor);
+            setColorPickerAnimation(hoverBackgroundColorPicker, !hoverStateSwitch.isExpanded
+                || !data[url].hoverBackgroundColor);
             chrome.storage.local.set({[url]: data[url]});
         });
     });
@@ -79,7 +113,7 @@ otherSwitch.onclick = () => {
     document.getElementById("other-elements").querySelectorAll('div[class="row1"]').forEach(d => {
         d.style.height = otherSwitch.isExpanded ? "20px" : "0";
         d.style.padding = otherSwitch.isExpanded ? "15px" : "0 15px";
-        d.style.borderTop = otherSwitch.isExpanded ? "1px solid rgb(240,240,240)" : "none";
+        // d.style.borderTop = otherSwitch.isExpanded ? "1px solid rgb(240,240,240)" : "none";
         d.querySelectorAll('*').forEach(e => {
             e.style.display = otherSwitch.isExpanded ? "inline-block" : "none";
         });
@@ -134,13 +168,9 @@ document.addEventListener('DOMContentLoaded', () => {
     backgroundColor.disabled = true;
     selectionFontColor.disabled = true;
     selectionBackgroundColor.disabled = true;
-    document.getElementById("other-elements").querySelectorAll("div").forEach(d => {
-        d.style.height = "0";
-        d.style.padding = "0 15px";
-        d.querySelectorAll('*').forEach(e => {
-            e.style.display = "none";
-        });
-    });
+    hoverFontColor.disabled = true;
+    hoverBackgroundColor.disabled = true;
+
     chrome.tabs.query({active: true, currentWindow: true}, tabs => {
         let url = (new URL(tabs[0].url)).hostname;
         console.log("current tab url: " + url);
@@ -181,9 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectionBackgroundColorSwitch.checked = data[url].selectionBackgroundColor;
                 updateColorHistory("selection-background");
                 document.getElementById("selection-state-elements").querySelectorAll('div[class="row1"]').forEach(d => {
-                    // d.style.height = selectionStateSwitch.isExpanded ? "20px" : "0";
                     d.style.padding = selectionStateSwitch.isExpanded ? "15px" : "0 15px";
-                    d.style.borderTop = selectionStateSwitch.isExpanded ? "1px solid rgb(240,240,240)" : "none";
                     d.querySelectorAll("span,input,label").forEach(e => {
                         e.style.display = selectionStateSwitch.isExpanded ? "inline-block" : "none";
                     });
@@ -198,12 +226,37 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
 
+                hoverStateSwitch.isExpanded = data[url].hoverState;
+                hoverStateSwitch.style.transform = hoverStateSwitch.isExpanded ? "rotate(90deg)" : "rotate(0deg)";
+                hoverFontColor.disabled = !data[url].hoverFontColor;
+                hoverFontColor.value = data[url].hoverFontColor ? data[url].hoverFontColor : "#222222";
+                hoverFontColorSwitch.checked = data[url].hoverFontColor;
+                updateColorHistory("hover-font");
+                hoverBackgroundColor.disabled = !data[url].hoverBackgroundColor;
+                hoverBackgroundColor.value = data[url].hoverBackgroundColor ? data[url].hoverBackgroundColor : "#F0F0F0";
+                hoverBackgroundColorSwitch.checked = data[url].hoverBackgroundColor;
+                updateColorHistory("hover-background");
+                document.getElementById("hover-state-elements").querySelectorAll('div[class="row1"]').forEach(d => {
+                    d.style.padding = hoverStateSwitch.isExpanded ? "15px" : "0 15px";
+                    d.querySelectorAll("span,input,label").forEach(e => {
+                        e.style.display = hoverStateSwitch.isExpanded ? "inline-block" : "none";
+                    });
+                    setColorPickerAnimation(hoverFontColorPicker, !hoverStateSwitch.isExpanded
+                        || !data[url].hoverFontColor);
+                    setColorPickerAnimation(hoverBackgroundColorPicker, !hoverStateSwitch.isExpanded
+                        || !data[url].hoverBackgroundColor);
+                });
+                if (data[url].hoverState) {
+                    chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+                        fetchScripts(["../contentScripts/hoverState/hoverState.js"], tabs);
+                    });
+                }
+
                 otherSwitch.isExpanded = data[url].other;
                 otherSwitch.style.transform = otherSwitch.isExpanded ? "rotate(90deg)" : "rotate(0deg)";
                 document.getElementById("other-elements").querySelectorAll('div[class="row1"]').forEach(d => {
                     d.style.height = otherSwitch.isExpanded ? "20px" : "0";
                     d.style.padding = otherSwitch.isExpanded ? "15px" : "0 15px";
-                    d.style.borderTop = otherSwitch.isExpanded ? "1px solid rgb(240,240,240)" : "none";
                     d.querySelectorAll('*').forEach(e => {
                         e.style.display = otherSwitch.isExpanded ? "inline-block" : "none";
                     });
@@ -233,31 +286,52 @@ document.addEventListener('DOMContentLoaded', () => {
                 fontColor.value = "#222222";
                 setColorPickerAnimation(fontColorPicker, true);
                 fontColorSwitch.checked = false;
-                // updateColorHistory("font");
                 backgroundColor.disabled = true;
                 backgroundColor.value = "#F0F0F0";
                 setColorPickerAnimation(backgroundColorPicker, true);
                 backgroundColorSwitch.checked = false;
-                // updateColorHistory("background");
 
                 selectionStateSwitch.isExpanded = false;
                 selectionStateSwitch.style.transform = "rotate(0deg)";
                 selectionFontColor.disabled = true;
                 selectionFontColor.value = "#222222";
                 selectionFontColorSwitch.checked = false;
-                // updateColorHistory("selection-font");
                 selectionBackgroundColor.disabled = true;
                 selectionBackgroundColor.value = "#F0F0F0";
                 selectionBackgroundColorSwitch.checked = false;
-                // updateColorHistory("selection-background");
                 document.getElementById("selection-state-elements").querySelectorAll('div[class="row1"]').forEach(d => {
                     d.style.padding = "0 15px";
-                    d.style.borderTop = "none";
+                    // d.style.borderTop = "none";
                     d.querySelectorAll("span,input,label").forEach(e => {
                         e.style.display = "none";
                     });
                     setColorPickerAnimation(selectionFontColorPicker, true);
                     setColorPickerAnimation(selectionBackgroundColorPicker, true);
+                });
+
+                hoverStateSwitch.isExpanded = false;
+                hoverStateSwitch.style.transform = "rotate(0deg)";
+                hoverFontColor.disabled = true;
+                hoverFontColor.value = "#222222";
+                hoverFontColorSwitch.checked = false;
+                hoverBackgroundColor.disabled = true;
+                hoverBackgroundColor.value = "#F0F0F0";
+                hoverBackgroundColorSwitch.checked = false;
+                document.getElementById("hover-state-elements").querySelectorAll('div[class="row1"]').forEach(d => {
+                    d.style.padding = "0 15px";
+                    d.querySelectorAll("span,input,label").forEach(e => {
+                        e.style.display = "none";
+                    });
+                    setColorPickerAnimation(hoverFontColorPicker, true);
+                    setColorPickerAnimation(hoverBackgroundColorPicker, true);
+                });
+
+                document.getElementById("other-elements").querySelectorAll("div").forEach(d => {
+                    d.style.height = "0";
+                    d.style.padding = "0 15px";
+                    d.querySelectorAll('*').forEach(e => {
+                        e.style.display = "none";
+                    });
                 });
             }
         });

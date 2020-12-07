@@ -2,6 +2,8 @@ import { update } from "./update.js";
 import { distinguishVisitedLinks } from "./contentScripts/distinguishVisitedLinks/distinguishVisitedLinks.js";
 import { focusHighlightCSS1, focusHighlightCSS2, focusHighlight } from "./contentScripts/focusHighlight/focusHighlight.js";
 import { setSelectionState } from "./contentScripts/selectionState/selectionState.js";
+import { setHoverState } from "./contentScripts/hoverState/hoverState.js";
+
 
 export { initLoad };
 
@@ -11,6 +13,10 @@ function initLoad() {
     chrome.storage.local.get(url, data => {
         if (data[url] && data[url].selectionState) {
             setSelectionState(data[url]);
+        }
+
+        if (data[url] && data[url].hoverState) {
+            setHoverState(data[url]);
         }
 
         if (data[url] && data[url].focusHighlight) {
