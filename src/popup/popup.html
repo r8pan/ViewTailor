@@ -31,7 +31,7 @@
                 <input id="font-color-switch" type="checkbox" aria-labelledby="font-color-label">
                 <span class="slider"></span>
             </label>
-            <div id="font-color-picker" class="font-color-history"></div>
+            <div id="font-color-picker" class="color-history"></div>
         </div>
 
         <div class="row1">
@@ -41,7 +41,7 @@
                 <input id="background-color-switch" type="checkbox" aria-labelledby="background-color-label">
                 <span class="slider"></span>
             </label>
-            <div id="background-color-picker" class="background-color-history"></div>
+            <div id="background-color-picker" class="color-history"></div>
         </div>
 
 
@@ -59,21 +59,19 @@
                     <input id="selection-font-color-switch" type="checkbox" aria-labelledby="selection-font-color-label">
                     <span class="slider"></span>
                 </label>
-                <div id="selection-font-color-picker" class="font-color-history"></div>
+                <div id="selection-font-color-picker" class="color-history"></div>
             </div>
 
             <div class="row1">
                 <span id="selection-background-color-label" class="label-control">Background color</span>
                 <input id="selection-background-color" type="color">
                 <label class="switch">
-                    <input id="selection-background-color-switch" type="checkbox" aria-labelledby="background-color-label">
+                    <input id="selection-background-color-switch" type="checkbox" aria-labelledby="selection-background-color-label">
                     <span class="slider"></span>
                 </label>
-                <div id="selection-background-color-picker" class="background-color-history"></div>
+                <div id="selection-background-color-picker" class="color-history"></div>
             </div>
         </div>
-
-
 
         <div class="row1 drop-down-row">
             <span id="hover-state-label" class="label-control">Hover state</span>
@@ -89,28 +87,56 @@
                     <input id="hover-font-color-switch" type="checkbox" aria-labelledby="hover-font-color-label">
                     <span class="slider"></span>
                 </label>
-                <div id="hover-font-color-picker" class="font-color-history"></div>
+                <div id="hover-font-color-picker" class="color-history"></div>
             </div>
 
             <div class="row1">
                 <span id="hover-background-color-label" class="label-control">Background color</span>
                 <input id="hover-background-color" type="color">
                 <label class="switch">
-                    <input id="hover-background-color-switch" type="checkbox" aria-labelledby="hover-color-label">
+                    <input id="hover-background-color-switch" type="checkbox" aria-labelledby="hover-background-color-label">
                     <span class="slider"></span>
                 </label>
-                <div id="hover-background-color-picker" class="background-color-history"></div>
+                <div id="hover-background-color-picker" class="color-history"></div>
             </div>
         </div>
 
+        <div class="row1 drop-down-row">
+            <span id="focus-state-label" class="label-control">Focus state</span>
+            <button id="focus-state-switch" class="menu-arrow" type="button"
+                aria-labelledby="focus-state-label">&#x276f;</button>
+        </div>
 
+        <div id="focus-state-elements">
+            <div class="row1">
+                <span id="focus-font-color-label" class="label-control">Font color</span>
+                <input id="focus-font-color" type="color">
+                <label class="switch">
+                    <input id="focus-font-color-switch" type="checkbox" aria-labelledby="focus-font-color-label">
+                    <span class="slider"></span>
+                </label>
+                <div id="focus-font-color-picker" class="color-history"></div>
+            </div>
 
-        <div class="row1">
-            <span id="focus-highlight-label">Focus state</span>
-            <label class="switch">
-                <input id="focus-highlight" type="checkbox" aria-labelledby="focus-highlight-label">
-                <span class="slider"></span>
-            </label>
+            <div class="row1">
+                <span id="focus-background-color-label" class="label-control">Background color</span>
+                <input id="focus-background-color" type="color">
+                <label class="switch">
+                    <input id="focus-background-color-switch" type="checkbox" aria-labelledby="focus-background-color-label">
+                    <span class="slider"></span>
+                </label>
+                <div id="focus-background-color-picker" class="color-history"></div>
+            </div>
+
+            <div class="row1">
+                <span id="focus-outline-color-label" class="label-control">Outline color</span>
+                <input id="focus-outline-color" type="color">
+                <label class="switch">
+                    <input id="focus-outline-color-switch" type="checkbox" aria-labelledby="focus-outline-color-label">
+                    <span class="slider"></span>
+                </label>
+                <div id="focus-outline-color-picker" class="color-history"></div>
+            </div>
         </div>
 
         <div class="row1 drop-down-row">

@@ -1,8 +1,8 @@
 import { update } from "./update.js";
-import { distinguishVisitedLinks } from "./contentScripts/distinguishVisitedLinks/distinguishVisitedLinks.js";
-import { focusHighlightCSS1, focusHighlightCSS2, focusHighlight } from "./contentScripts/focusHighlight/focusHighlight.js";
 import { setSelectionState } from "./contentScripts/selectionState/selectionState.js";
 import { setHoverState } from "./contentScripts/hoverState/hoverState.js";
+import { setFocusState } from "./contentScripts/focusState/focusState.js";
+import { distinguishVisitedLinks } from "./contentScripts/distinguishVisitedLinks/distinguishVisitedLinks.js";
 
 
 export { initLoad };
@@ -19,8 +19,8 @@ function initLoad() {
             setHoverState(data[url]);
         }
 
-        if (data[url] && data[url].focusHighlight) {
-            focusHighlight(data[url], focusHighlightCSS1, focusHighlightCSS2);
+        if (data[url] && data[url].focusState) {
+            setFocusState(data[url]);
         }
 
         if (data[url] && data[url].distinguishVisitedLinks) {
