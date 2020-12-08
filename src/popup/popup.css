@@ -60,10 +60,11 @@ input[type="color"]:focus {
     background-color: rgb(240,240,240);
     border: 1px solid rgb(220,220,220);
     border-width: 1px 0 0 0;
+    padding: 15px;
 }
 
 .row1 {
-    padding: 15px;
+    padding: 0px;
     /* border-top: 1px solid rgb(240,240,240); */
     transition: height 0.3s, padding 0.3s;
 }

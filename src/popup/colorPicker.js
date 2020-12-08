@@ -1,6 +1,6 @@
 import { RGB2Hex, dash2cc, fetchScripts } from "../utilities/utils.js";
 
-export { initColorPicker, updateColorHistory, setColorPickerAnimation };
+export { initColorPicker, updateColorHistory, setCollapsedColorPickerAnimation, setColorPickerAnimation };
 
 function initColorPicker(type) {
     let c = document.getElementById(type + "-color");
@@ -103,6 +103,23 @@ function changeColor(disabled, color, type) {
                 });
             }
         });
+    });
+}
+
+function setCollapsedColorPickerAnimation(type, isExpanded, settings) {
+    document.getElementById(type+"-state-elements").querySelectorAll('div[class="row1"]').forEach(d => {
+        d.style.padding = isExpanded ? "15px" : "0 15px";
+        d.querySelectorAll("span,input,label").forEach(e => {
+            e.style.display = isExpanded ? "inline-block" : "none";
+        });
+        setColorPickerAnimation(document.getElementById(type+"-font-color-picker"), !isExpanded
+            || !settings[type+"FontColor"]);
+        setColorPickerAnimation(document.getElementById(type+"-background-color-picker"), !isExpanded
+            || !settings[type+"BackgroundColor"]);
+        if (type === "focus") {
+            setColorPickerAnimation(document.getElementById(type+"-outline-color-picker"), !isExpanded
+                || !settings[type+"OutlineColor"]);
+        }
     });
 }
 
